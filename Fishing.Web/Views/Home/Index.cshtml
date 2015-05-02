@@ -1,0 +1,26 @@
+﻿<div class="jumbotron">
+    <h1>Matt's Fishing Pictures</h1>
+    <p class="lead">Some fishing pictures I've gathered over the years</p>
+</div>
+<div class="row" data-bind="foreach: pics()">
+    <div class="col-md-4 quickpic">
+        @*<h2>Getting started</h2>*@
+        <img data-bind="attr:{ src:ThumbUrl }" />
+        <p data-bind="text:Description"></p>
+        <p><a class="btn btn-default" href="#">More &raquo;</a></p>
+    </div>
+</div>
+
+@section scripts {
+    <script type="text/javascript">
+        var model = { pics: ko.observableArray() };
+        $(document).ready(function () {
+            ko.applyBindings(model);
+            $.ajax({
+                url: "/api/pics/latest/10", success: function (data) {
+                    model.pics(ko.mapping.fromJS(data));
+                }
+            });
+        });
+    </script>
+}

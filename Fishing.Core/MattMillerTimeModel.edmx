@@ -1,0 +1,564 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="MattMillerTimeModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2005" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="BlogEntries">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="entrytext" Type="text" Nullable="false" />
+          <Property Name="entrydate" Type="datetime" Nullable="false" />
+          <Property Name="entrytitle" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="user_id" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="BlogEntryCategories">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="categoryname" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="BlogEntryCategories_XREF">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="entry_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="category_id" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Categories">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="categoryname" Type="varchar" MaxLength="500" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Comments">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="pic_id" Type="int" Nullable="false" />
+          <Property Name="user_id" Type="int" Nullable="false" />
+          <Property Name="commentdate" Type="datetime" Nullable="false" />
+          <Property Name="commenttext" Type="varchar" MaxLength="4000" Nullable="false" />
+        </EntityType>
+        <EntityType Name="PicCategories">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="pic_id" Type="int" Nullable="false" />
+          <Property Name="category_id" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Pics">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="url" Type="varchar" MaxLength="1000" Nullable="false" />
+          <Property Name="thumburl" Type="varchar" MaxLength="1000" Nullable="false" />
+          <Property Name="description" Type="varchar" MaxLength="4000" />
+          <Property Name="user_id" Type="int" />
+          <Property Name="upload_date" Type="datetime" />
+          <Property Name="approved" Type="bit" />
+        </EntityType>
+        <EntityType Name="Users">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="username" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="password" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="first_name" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="last_name" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="email" Type="varchar" MaxLength="255" />
+          <Property Name="access" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_BlogEntries_Users">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="BlogEntries" Type="Self.BlogEntries" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="BlogEntries">
+              <PropertyRef Name="user_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_BlogEntryCategories_XREF_BlogEntries">
+          <End Role="BlogEntries" Type="Self.BlogEntries" Multiplicity="1" />
+          <End Role="BlogEntryCategories_XREF" Type="Self.BlogEntryCategories_XREF" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BlogEntries">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="BlogEntryCategories_XREF">
+              <PropertyRef Name="entry_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_BlogEntryCategories_XREF_BlogEntryCategories">
+          <End Role="BlogEntryCategories" Type="Self.BlogEntryCategories" Multiplicity="1" />
+          <End Role="BlogEntryCategories_XREF" Type="Self.BlogEntryCategories_XREF" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BlogEntryCategories">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="BlogEntryCategories_XREF">
+              <PropertyRef Name="category_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Comments_ToPic">
+          <End Role="Pics" Type="Self.Pics" Multiplicity="1" />
+          <End Role="Comments" Type="Self.Comments" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Pics">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Comments">
+              <PropertyRef Name="pic_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Comments_ToUser">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="Comments" Type="Self.Comments" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Comments">
+              <PropertyRef Name="user_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PicCategories_Categories">
+          <End Role="Categories" Type="Self.Categories" Multiplicity="1" />
+          <End Role="PicCategories" Type="Self.PicCategories" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Categories">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="PicCategories">
+              <PropertyRef Name="category_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PicCategories_Pics">
+          <End Role="Pics" Type="Self.Pics" Multiplicity="1" />
+          <End Role="PicCategories" Type="Self.PicCategories" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Pics">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="PicCategories">
+              <PropertyRef Name="pic_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Pics_Users">
+          <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
+          <End Role="Pics" Type="Self.Pics" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Pics">
+              <PropertyRef Name="user_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="MattMillerTimeModelStoreContainer">
+          <EntitySet Name="BlogEntries" EntityType="Self.BlogEntries" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="BlogEntryCategories" EntityType="Self.BlogEntryCategories" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="BlogEntryCategories_XREF" EntityType="Self.BlogEntryCategories_XREF" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Categories" EntityType="Self.Categories" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Comments" EntityType="Self.Comments" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PicCategories" EntityType="Self.PicCategories" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Pics" EntityType="Self.Pics" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_BlogEntries_Users" Association="Self.FK_BlogEntries_Users">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="BlogEntries" EntitySet="BlogEntries" />
+          </AssociationSet>
+          <AssociationSet Name="FK_BlogEntryCategories_XREF_BlogEntries" Association="Self.FK_BlogEntryCategories_XREF_BlogEntries">
+            <End Role="BlogEntries" EntitySet="BlogEntries" />
+            <End Role="BlogEntryCategories_XREF" EntitySet="BlogEntryCategories_XREF" />
+          </AssociationSet>
+          <AssociationSet Name="FK_BlogEntryCategories_XREF_BlogEntryCategories" Association="Self.FK_BlogEntryCategories_XREF_BlogEntryCategories">
+            <End Role="BlogEntryCategories" EntitySet="BlogEntryCategories" />
+            <End Role="BlogEntryCategories_XREF" EntitySet="BlogEntryCategories_XREF" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Comments_ToPic" Association="Self.FK_Comments_ToPic">
+            <End Role="Pics" EntitySet="Pics" />
+            <End Role="Comments" EntitySet="Comments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Comments_ToUser" Association="Self.FK_Comments_ToUser">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Comments" EntitySet="Comments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PicCategories_Categories" Association="Self.FK_PicCategories_Categories">
+            <End Role="Categories" EntitySet="Categories" />
+            <End Role="PicCategories" EntitySet="PicCategories" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PicCategories_Pics" Association="Self.FK_PicCategories_Pics">
+            <End Role="Pics" EntitySet="Pics" />
+            <End Role="PicCategories" EntitySet="PicCategories" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Pics_Users" Association="Self.FK_Pics_Users">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Pics" EntitySet="Pics" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="MattMillerTimeModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="BlogEntry">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="entrytext" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="entrydate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="entrytitle" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="user_id" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="User" Relationship="Self.FK_BlogEntries_Users" FromRole="BlogEntries" ToRole="Users" />
+          <NavigationProperty Name="BlogEntryCategories_XREF" Relationship="Self.FK_BlogEntryCategories_XREF_BlogEntries" FromRole="BlogEntries" ToRole="BlogEntryCategories_XREF" />
+        </EntityType>
+        <EntityType Name="BlogEntryCategory">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="categoryname" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="BlogEntryCategories_XREF" Relationship="Self.FK_BlogEntryCategories_XREF_BlogEntryCategories" FromRole="BlogEntryCategories" ToRole="BlogEntryCategories_XREF" />
+        </EntityType>
+        <EntityType Name="BlogEntryCategories_XREF">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="entry_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="category_id" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="BlogEntry" Relationship="Self.FK_BlogEntryCategories_XREF_BlogEntries" FromRole="BlogEntryCategories_XREF" ToRole="BlogEntries" />
+          <NavigationProperty Name="BlogEntryCategory" Relationship="Self.FK_BlogEntryCategories_XREF_BlogEntryCategories" FromRole="BlogEntryCategories_XREF" ToRole="BlogEntryCategories" />
+        </EntityType>
+        <EntityType Name="Category">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="categoryname" Type="String" MaxLength="500" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="PicCategories" Relationship="Self.FK_PicCategories_Categories" FromRole="Categories" ToRole="PicCategories" />
+        </EntityType>
+        <EntityType Name="Comment">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="pic_id" Type="Int32" Nullable="false" />
+          <Property Name="user_id" Type="Int32" Nullable="false" />
+          <Property Name="commentdate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="commenttext" Type="String" MaxLength="4000" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Pic" Relationship="Self.FK_Comments_ToPic" FromRole="Comments" ToRole="Pics" />
+          <NavigationProperty Name="User" Relationship="Self.FK_Comments_ToUser" FromRole="Comments" ToRole="Users" />
+        </EntityType>
+        <EntityType Name="PicCategory">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="pic_id" Type="Int32" Nullable="false" />
+          <Property Name="category_id" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Category" Relationship="Self.FK_PicCategories_Categories" FromRole="PicCategories" ToRole="Categories" />
+          <NavigationProperty Name="Pic" Relationship="Self.FK_PicCategories_Pics" FromRole="PicCategories" ToRole="Pics" />
+        </EntityType>
+        <EntityType Name="Pic">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="url" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="thumburl" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="description" Type="String" MaxLength="4000" FixedLength="false" Unicode="false" />
+          <Property Name="user_id" Type="Int32" />
+          <Property Name="upload_date" Type="DateTime" Precision="3" />
+          <Property Name="approved" Type="Boolean" />
+          <NavigationProperty Name="Comments" Relationship="Self.FK_Comments_ToPic" FromRole="Pics" ToRole="Comments" />
+          <NavigationProperty Name="PicCategories" Relationship="Self.FK_PicCategories_Pics" FromRole="Pics" ToRole="PicCategories" />
+          <NavigationProperty Name="User" Relationship="Self.FK_Pics_Users" FromRole="Pics" ToRole="Users" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="username" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="password" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="first_name" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="last_name" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="email" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="access" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="BlogEntries" Relationship="Self.FK_BlogEntries_Users" FromRole="Users" ToRole="BlogEntries" />
+          <NavigationProperty Name="Comments" Relationship="Self.FK_Comments_ToUser" FromRole="Users" ToRole="Comments" />
+          <NavigationProperty Name="Pics" Relationship="Self.FK_Pics_Users" FromRole="Users" ToRole="Pics" />
+        </EntityType>
+        <Association Name="FK_BlogEntries_Users">
+          <End Role="Users" Type="Self.User" Multiplicity="1" />
+          <End Role="BlogEntries" Type="Self.BlogEntry" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="BlogEntries">
+              <PropertyRef Name="user_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_BlogEntryCategories_XREF_BlogEntries">
+          <End Role="BlogEntries" Type="Self.BlogEntry" Multiplicity="1" />
+          <End Role="BlogEntryCategories_XREF" Type="Self.BlogEntryCategories_XREF" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BlogEntries">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="BlogEntryCategories_XREF">
+              <PropertyRef Name="entry_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_BlogEntryCategories_XREF_BlogEntryCategories">
+          <End Role="BlogEntryCategories" Type="Self.BlogEntryCategory" Multiplicity="1" />
+          <End Role="BlogEntryCategories_XREF" Type="Self.BlogEntryCategories_XREF" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BlogEntryCategories">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="BlogEntryCategories_XREF">
+              <PropertyRef Name="category_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PicCategories_Categories">
+          <End Role="Categories" Type="Self.Category" Multiplicity="1" />
+          <End Role="PicCategories" Type="Self.PicCategory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Categories">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="PicCategories">
+              <PropertyRef Name="category_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Comments_ToPic">
+          <End Role="Pics" Type="Self.Pic" Multiplicity="1" />
+          <End Role="Comments" Type="Self.Comment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Pics">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Comments">
+              <PropertyRef Name="pic_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Comments_ToUser">
+          <End Role="Users" Type="Self.User" Multiplicity="1" />
+          <End Role="Comments" Type="Self.Comment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Comments">
+              <PropertyRef Name="user_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PicCategories_Pics">
+          <End Role="Pics" Type="Self.Pic" Multiplicity="1" />
+          <End Role="PicCategories" Type="Self.PicCategory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Pics">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="PicCategories">
+              <PropertyRef Name="pic_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Pics_Users">
+          <End Role="Users" Type="Self.User" Multiplicity="0..1" />
+          <End Role="Pics" Type="Self.Pic" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Pics">
+              <PropertyRef Name="user_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="MattMillerTimeEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="BlogEntries" EntityType="Self.BlogEntry" />
+          <EntitySet Name="BlogEntryCategories" EntityType="Self.BlogEntryCategory" />
+          <EntitySet Name="BlogEntryCategories_XREF" EntityType="Self.BlogEntryCategories_XREF" />
+          <EntitySet Name="Categories" EntityType="Self.Category" />
+          <EntitySet Name="Comments" EntityType="Self.Comment" />
+          <EntitySet Name="PicCategories" EntityType="Self.PicCategory" />
+          <EntitySet Name="Pics" EntityType="Self.Pic" />
+          <EntitySet Name="Users" EntityType="Self.User" />
+          <AssociationSet Name="FK_BlogEntries_Users" Association="Self.FK_BlogEntries_Users">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="BlogEntries" EntitySet="BlogEntries" />
+          </AssociationSet>
+          <AssociationSet Name="FK_BlogEntryCategories_XREF_BlogEntries" Association="Self.FK_BlogEntryCategories_XREF_BlogEntries">
+            <End Role="BlogEntries" EntitySet="BlogEntries" />
+            <End Role="BlogEntryCategories_XREF" EntitySet="BlogEntryCategories_XREF" />
+          </AssociationSet>
+          <AssociationSet Name="FK_BlogEntryCategories_XREF_BlogEntryCategories" Association="Self.FK_BlogEntryCategories_XREF_BlogEntryCategories">
+            <End Role="BlogEntryCategories" EntitySet="BlogEntryCategories" />
+            <End Role="BlogEntryCategories_XREF" EntitySet="BlogEntryCategories_XREF" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PicCategories_Categories" Association="Self.FK_PicCategories_Categories">
+            <End Role="Categories" EntitySet="Categories" />
+            <End Role="PicCategories" EntitySet="PicCategories" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Comments_ToPic" Association="Self.FK_Comments_ToPic">
+            <End Role="Pics" EntitySet="Pics" />
+            <End Role="Comments" EntitySet="Comments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Comments_ToUser" Association="Self.FK_Comments_ToUser">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Comments" EntitySet="Comments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PicCategories_Pics" Association="Self.FK_PicCategories_Pics">
+            <End Role="Pics" EntitySet="Pics" />
+            <End Role="PicCategories" EntitySet="PicCategories" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Pics_Users" Association="Self.FK_Pics_Users">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Pics" EntitySet="Pics" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="MattMillerTimeModelStoreContainer" CdmEntityContainer="MattMillerTimeEntities">
+          <EntitySetMapping Name="BlogEntries">
+            <EntityTypeMapping TypeName="MattMillerTimeModel.BlogEntry">
+              <MappingFragment StoreEntitySet="BlogEntries">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="entrytext" ColumnName="entrytext" />
+                <ScalarProperty Name="entrydate" ColumnName="entrydate" />
+                <ScalarProperty Name="entrytitle" ColumnName="entrytitle" />
+                <ScalarProperty Name="user_id" ColumnName="user_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BlogEntryCategories">
+            <EntityTypeMapping TypeName="MattMillerTimeModel.BlogEntryCategory">
+              <MappingFragment StoreEntitySet="BlogEntryCategories">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="categoryname" ColumnName="categoryname" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BlogEntryCategories_XREF">
+            <EntityTypeMapping TypeName="MattMillerTimeModel.BlogEntryCategories_XREF">
+              <MappingFragment StoreEntitySet="BlogEntryCategories_XREF">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="entry_id" ColumnName="entry_id" />
+                <ScalarProperty Name="category_id" ColumnName="category_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Categories">
+            <EntityTypeMapping TypeName="MattMillerTimeModel.Category">
+              <MappingFragment StoreEntitySet="Categories">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="categoryname" ColumnName="categoryname" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Comments">
+            <EntityTypeMapping TypeName="MattMillerTimeModel.Comment">
+              <MappingFragment StoreEntitySet="Comments">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="pic_id" ColumnName="pic_id" />
+                <ScalarProperty Name="user_id" ColumnName="user_id" />
+                <ScalarProperty Name="commentdate" ColumnName="commentdate" />
+                <ScalarProperty Name="commenttext" ColumnName="commenttext" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PicCategories">
+            <EntityTypeMapping TypeName="MattMillerTimeModel.PicCategory">
+              <MappingFragment StoreEntitySet="PicCategories">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="pic_id" ColumnName="pic_id" />
+                <ScalarProperty Name="category_id" ColumnName="category_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Pics">
+            <EntityTypeMapping TypeName="MattMillerTimeModel.Pic">
+              <MappingFragment StoreEntitySet="Pics">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="url" ColumnName="url" />
+                <ScalarProperty Name="thumburl" ColumnName="thumburl" />
+                <ScalarProperty Name="description" ColumnName="description" />
+                <ScalarProperty Name="user_id" ColumnName="user_id" />
+                <ScalarProperty Name="upload_date" ColumnName="upload_date" />
+                <ScalarProperty Name="approved" ColumnName="approved" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Users">
+            <EntityTypeMapping TypeName="MattMillerTimeModel.User">
+              <MappingFragment StoreEntitySet="Users">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="username" ColumnName="username" />
+                <ScalarProperty Name="password" ColumnName="password" />
+                <ScalarProperty Name="first_name" ColumnName="first_name" />
+                <ScalarProperty Name="last_name" ColumnName="last_name" />
+                <ScalarProperty Name="email" ColumnName="email" />
+                <ScalarProperty Name="access" ColumnName="access" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

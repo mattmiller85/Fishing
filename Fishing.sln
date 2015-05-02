@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.22823.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fishing.Web", "Fishing.Web\Fishing.Web.csproj", "{05C5EBD6-E07B-4CB6-8141-1D06585A29CC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fishing.Core", "Fishing.Core\Fishing.Core.csproj", "{7B509009-A1EA-4DBB-979A-68BC2C476D6E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{05C5EBD6-E07B-4CB6-8141-1D06585A29CC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{05C5EBD6-E07B-4CB6-8141-1D06585A29CC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{05C5EBD6-E07B-4CB6-8141-1D06585A29CC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{05C5EBD6-E07B-4CB6-8141-1D06585A29CC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7B509009-A1EA-4DBB-979A-68BC2C476D6E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7B509009-A1EA-4DBB-979A-68BC2C476D6E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7B509009-A1EA-4DBB-979A-68BC2C476D6E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7B509009-A1EA-4DBB-979A-68BC2C476D6E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
