@@ -2,23 +2,58 @@
     <h1>Matt's Fishing Pictures</h1>
     <p class="lead">Some fishing pictures I've gathered over the years</p>
 </div>
-<div class="row" data-bind="foreach: pics()">
+<div data-bind="visible: isLoading()">
+    <img src="~/Content/loading.gif" />
+</div>
+<div class="row" data-bind="visible: !isLoading(), foreach: pics()">
     <div class="col-md-4 quickpic">
-        @*<h2>Getting started</h2>*@
-        <img data-bind="attr:{ src:ThumbUrl }" />
+        <img data-bind="attr:{ src:ThumbUrl }, event: {'click': $root.setCurrentPic}" />
+        <div>
+            <span>Uploaded</span>
+            <span data-bind="visible: HasUploadDate(), text:moment(UploadDate()).calendar()"></span>
+            <span>by</span>
+            <span data-bind="text: UploadedBy"></span>
+        </div>
         <p data-bind="text:Description"></p>
-        <p><a class="btn btn-default" href="#">More &raquo;</a></p>
     </div>
 </div>
 
+@section navLinks{
+    @foreach(var category in Model.Categories)
+    {
+        <li><a href="#" data-categoryid="@category.id">@category.categoryname</a></li>
+    }
+}
+
 @section scripts {
     <script type="text/javascript">
-        var model = { pics: ko.observableArray() };
+        var model = {
+            pics: ko.observableArray(), isLoading: ko.observable(true), currentPic: ko.observable({ Url: ko.observable(), Description: ko.observable() }), setCurrentPic: function (pic) {
+                model.currentPic(pic);
+            }
+        };
+        
         $(document).ready(function () {
             ko.applyBindings(model);
+            model.isLoading(true);
             $.ajax({
                 url: "/api/pics/latest/10", success: function (data) {
                     model.pics(ko.mapping.fromJS(data));
+                    model.isLoading(false);
+                }
+            });
+        });
+        $("ul.navbar-nav > li > a").click(function (evt) {
+            evt.preventDefault();
+            evt.stopPropagation();
+            model.isLoading(true);
+            $.ajax({
+                url: "/api/pics/categories/" + $(this).data("categoryid"), success: function (data) {
+                    model.pics(ko.mapping.fromJS(data));
+                    var navButton = $("button.navbar-toggle");
+                    if(navButton.is(":visible"))
+                        navButton.click();
+                    model.isLoading(false);
                 }
             });
         });

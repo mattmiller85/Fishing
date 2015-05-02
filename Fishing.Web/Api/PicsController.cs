@@ -18,18 +18,24 @@ namespace Fishing.Web.Api
         private MattMillerTimeEntities db = new MattMillerTimeEntities();
 
         [Route("api/pics/latest/{number}")]
-        public IEnumerable<PicViewModel> GetPics(int number)
+        public IEnumerable<PicViewModel> GetLatestPics(int number)
         {
             return db.Pics.OrderByDescending(p => p.upload_date).Take(number)
-                .Select(p => new PicViewModel
-                {
-                    Description = p.description,
-                    Id = p.id,
-                    Url = p.url,
-                    ThumbUrl = p.thumburl,
-                    UploadDate = p.upload_date ?? DateTime.Now,
-                    UploadedBy = p.User.username                    
-                });
+                .ToList()
+                .Select(p => PicViewModel.FromPic(p));
+        }
+
+        [Route("api/pics/categories/{categoryIds}")]
+        public IEnumerable<PicViewModel> GetPicsByCategoryIds(string categoryIds)
+        {
+            var ids = categoryIds.Split(',');
+            var idList = ids.Select(s => int.Parse(s.Trim()));
+            return db.PicCategories
+                    .Where(p => idList.Contains(p.category_id))
+                    .Select(pc => pc.Pic)
+                    .OrderByDescending(p => p.upload_date)
+                    .ToList()
+                    .Select(p => PicViewModel.FromPic(p));
         }
 
         // GET: api/Pics/5

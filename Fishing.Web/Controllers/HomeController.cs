@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Fishing.Core;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -8,11 +9,13 @@ namespace Fishing.Web.Controllers
 {
     public class HomeController : Controller
     {
+        private MattMillerTimeEntities db = new MattMillerTimeEntities();
+
         public ActionResult Index()
         {
             ViewBag.Title = "Home Page";
-
-            return View();
+            var vm = new { Categories = db.Categories }.ToExpando();
+            return View(vm);
         }
     }
 }

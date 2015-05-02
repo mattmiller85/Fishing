@@ -18,4 +18,9 @@ textarea {
 
 div.quickpic{
     height:200px;
+    text-align:center;
+}
+
+div.quickpic img{
+    cursor:pointer;
 }

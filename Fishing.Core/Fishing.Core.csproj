@@ -66,6 +66,7 @@
     <Compile Include="Comment.cs">
       <DependentUpon>MattMillerTimeModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Extensions.cs" />
     <Compile Include="MattMillerTimeModel.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
